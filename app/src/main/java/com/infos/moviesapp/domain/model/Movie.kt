@@ -4,5 +4,5 @@ data class Movie(
     val imageUrl : String?,
     val title : String?,
     val year : String?,
-    val imdbRating : String?
+    val imdbID : String?
 )

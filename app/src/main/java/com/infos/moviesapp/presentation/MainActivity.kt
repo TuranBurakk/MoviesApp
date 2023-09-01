@@ -8,9 +8,10 @@ import androidx.compose.material.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.infos.moviesapp.presentation.movie_detail.views.MovieDetailScreen
 import com.infos.moviesapp.presentation.movies.views.MovieScreen
 import com.infos.moviesapp.presentation.ui.theme.MoviesAppTheme
-import com.infos.moviesapp.presentation.ui.theme.Typography
+import com.infos.moviesapp.util.Constants.IMDB_ID
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,8 +30,8 @@ class MainActivity : ComponentActivity() {
                             MovieScreen(navController = navController)
                         }
 
-                        composable(route = Screen.MovieDetailScreen.route){
-
+                        composable(route = Screen.MovieDetailScreen.route+"/{${IMDB_ID}}"){
+                            MovieDetailScreen()
                         }
                     }
                 }
