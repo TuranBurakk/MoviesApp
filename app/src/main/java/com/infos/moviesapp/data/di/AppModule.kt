@@ -16,6 +16,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule  {
 
+    @Provides
+    @Singleton
     fun provideMovieApi(): MovieAPI{
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
