@@ -25,44 +25,42 @@ import com.infos.moviesapp.domain.model.Movie
 
 @Composable
 fun MovieListRow(
-    movie:Movie,
-    onItemClick:(Movie)-> Unit
+    movie : Movie,
+    onItemClick : (Movie) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onItemClick(movie)
-            }
+            .clickable { onItemClick(movie) }
             .padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(
-            painter = rememberImagePainter(data = movie.imageUrl), contentDescription = movie.title,
+
+        Image(painter = rememberImagePainter(data = movie.imageUrl),
+            contentDescription = movie.title,
             modifier = Modifier
                 .padding(16.dp)
                 .size(200.dp, 200.dp)
                 .clip(RectangleShape)
         )
-        Column(
-            modifier = Modifier.align(CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                movie.title ?: "",
+
+        Column(modifier = Modifier.align(CenterVertically),horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(movie.title ?: "",
                 style = MaterialTheme.typography.h5,
                 overflow = TextOverflow.Ellipsis,
                 color = White,
                 textAlign = TextAlign.Center
             )
 
-            Text(
-                movie.year ?: "",
+            Text(movie.year ?: "",
                 style = MaterialTheme.typography.h6,
                 overflow = TextOverflow.Ellipsis,
                 color = White,
                 textAlign = TextAlign.Center
             )
+
         }
+
+
     }
 }

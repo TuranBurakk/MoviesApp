@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
@@ -34,57 +37,83 @@ import com.infos.moviesapp.presentation.movies.MoviesViewModel
 @Composable
 fun MovieScreen(
     navController: NavController,
-    viewModel: MoviesViewModel = hiltViewModel()
-){
+    viewModel : MoviesViewModel = hiltViewModel()
+) {
+
     val state = viewModel.state.value
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)){
-        Column {
-            MoviesSearchBar(modifier = Modifier
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+
+        Column() {
+            MovieSearchBar(modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
                 hint = "Batman",
                 onSearch = {
                     viewModel.onEvent(MovieEvent.Search(it))
-                })
-            LazyColumn(modifier = Modifier.fillMaxSize()){
-                items(state.movies){movie->
-                    MovieListRow(movie = movie, onItemClick ={
-                        //navController.navigate(Screen.MovieDetailScreen.route+"id")
-                    } )
+                }
+            )
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state.movies) { movie ->
+                    MovieListRow(movie = movie, onItemClick = {
+                        //navigate to details
+                        navController.navigate(Screen.MovieDetailScreen.route+"/${movie.imdbID}")
+                    })
                 }
             }
         }
+
+
+
+        if (state.error.isNotBlank()) {
+            Text(text = state.error,
+                color = MaterialTheme.colors.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(14.dp)
+                    .align(Alignment.Center)
+            )
+        }
+
+        if(state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
     }
+
+
 }
 
 @Composable
-fun MoviesSearchBar(
-    modifier: Modifier,
-    hint :String = "",
+fun MovieSearchBar(
+    modifier : Modifier,
+    hint: String = "",
     onSearch: (String) -> Unit = {}
-){
-    var text by remember{
+) {
+    var text by remember {
         mutableStateOf("")
     }
-    var isHintDisplayed by remember{
+    var isHintDisplayed by remember {
         mutableStateOf(hint != "")
     }
 
-    Box(modifier = modifier){
-        TextField(value =text ,
-            onValueChange ={
-               text = it
-            },
+    Box(modifier = modifier) {
+        TextField(
+            value = text,
             keyboardActions = KeyboardActions(onDone = {
                 onSearch(text)
             }),
+            onValueChange = {
+                text =it
+            },
+            maxLines = 1,
             singleLine = true,
             textStyle = TextStyle(color = Color.Black),
             shape = RoundedCornerShape(12.dp),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White)
+            ,
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(5.dp, CircleShape)
@@ -94,12 +123,14 @@ fun MoviesSearchBar(
                     isHintDisplayed = it.isFocused != true && text.isEmpty()
                 }
         )
-        if (isHintDisplayed){
-            Text(text = hint,
+        if(isHintDisplayed) {
+            Text(
+                text = hint,
                 color = Color.LightGray,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+            )
         }
     }
 }
-
 
